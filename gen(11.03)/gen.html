@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="main.css" type="text/css">
+    <script src="jquery.js"></script>
+    <script src="printTitle.js">// 제목을 tl 변수에 저장하는 스크립트</script>
+    
+
+    <script>  // 전역변수 설정
+        var fn = [];  // 파일 경로 저장
+        var tl = "";  // 제목 저장
+        var i = "0";  // 반복 카운트 변수
+
+
+    </script>
+    <script src="save3.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <input id="title" type="text" value="제목을 입력해 주세요.">
+    </header>
+    <nav class="nav">nav</nav>
+    <section class="section">
+        <div id="sec1">
+            <table id="t1" border="2">
+                <tr>
+                    <td width="50%">
+                        <h1>생성할 페이지의 형식을 선택해 주세요.</h1>
+                    </td>
+                    <td width="55%">
+                        <table id="sel" border="1">
+                            <tr>
+                                <td width="40%">
+                                    사진
+                                </td>
+                                <td width="10%">
+                                    <input type="radio" name="form" value="1" checked onclick="val=1;">
+                                </td>
+                                <td width="40%">
+                                    사진+글
+                                </td>
+                                <td width="10%">
+                                    <input type="radio" name="form" value="2" onclick="val=2;">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h1>페이지를 생성할 폴더를 선택해 주세요.</h1>
+                    </td>
+                    <td><input type="file" id="selFolder" value="폴더 선택" webkitdirectory>
+                        <input type="button" value="다시하기" onclick="window.location.reload()">
+                        <input type="button" value="확인하기" onclick="fileList();">
+                    </td>
+
+                </tr>
+                <tr height="70">
+                    <td colspan="2">
+                        <input id="gen" type="button" onclick="print();carve();download(data, filename, type);" value="생성하기">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="page" class="file_list">
+            <p></p>
+        </div>
+
+        <script>
+            var val = null;
+
+
+            // 라디오 버튼 입력 처리하기
+            var rdio = function () {
+                var radioSel = document.getElementsByName("form");
+                var check = null;
+
+                for (var i = 0; i < radioSel.length; i++) {
+                    if (radioSel[i].checked == true) {
+                        check = radioSel[i];
+                        val = check.value;
+                    }
+                }
+                if (check != null) {
+                    alert(check.value);
+                }
+            }
+
+        </script>
+
+        <script>
+
+            function refresh(href) {
+
+                jQuery('#page').load(href);
+
+            }
+
+            var fileList = function () {
+                var j=fn.length;
+                for(var k=0 ; k<j ; k++)
+                {
+                    alert(j);
+                    alert(fn[k]);
+                }
+            }
+
+        </script>
+
+        <script src='upload2.js'></script>
+        
+    </section>
+    <nav class="nav">nav</nav>
+
+
+
+
+</body>
+
+</html>
