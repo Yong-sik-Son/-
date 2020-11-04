@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, height=device-height" />
+
+    <script>
+        var link = [];
+        link[0] = "https://cne1006-my.sharepoint.com/:p:/g/personal/nm30_cnnse_cneo365_kr/EVLffWn_lDxAjy-ADcC0C0sBrm1bjx1abXCNX-nXJPejPA?e=i6Cdj2"; // 여기에 주소를 입력하세요.
+        link[1] = "https://cne1006-my.sharepoint.com/:p:/g/personal/nm30_cnnse_cneo365_kr/ETmrROHpmJFHuzz6j8-ueKwBOkRZO_n1NDbCeJHMfHmgxg?e=kBLhhD"; // 여기에 주소를 입력하세요.
+        link[2] = "https://cne1006-my.sharepoint.com/:p:/g/personal/nm30_cnnse_cneo365_kr/EZnF0iRQxUBFjdWVlImwQVQB7wWCciyueZMsZ6QXshHfrA?e=qca7ZX"; // 여기에 주소를 입력하세요.
+
+
+
+
+        var scrwidth = screen.width;
+        var swit = 0;
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+        // More API functions here:
+        // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+
+        // the link to your model provided by Teachable Machine export panel
+        const URL = "./my_model/";
+
+        let model, webcam, labelContainer, maxPredictions;
+
+        // Load the image model and setup the webcam
+        async function init() {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+
+            // load the model and metadata
+            // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+            // or files from your local hard drive
+            // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+
+            max = maxPredictions;
+
+            // Convenience function to setup a webcam
+            const flip = false; // whether to flip the webcam
+            webcam = new tmImage.Webcam(2 * scrwidth / 5, 2 * scrwidth / 5, flip); // width, height, flip
+            await webcam.setup(); // request access to the webcam
+            await webcam.play();
+            window.requestAnimationFrame(loop);
+
+            // append elements to the DOM
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+            labelContainer = document.getElementById("label-container");
+            for (let i = 0; i < maxPredictions; i++) { // and class labels
+                labelContainer.appendChild(document.createElement("div"));
+            }
+        }
+
+        async function loop() {
+            webcam.update(); // update the webcam frame
+            await predict();
+
+        }
+
+        // run the webcam image through the image model
+        async function predict() {
+            // predict can take in an image, video or canvas html element
+            var prediction = await model.predict(webcam.canvas);
+            for (let i = 0; i < maxPredictions; i++) {
+                const classPrediction =
+                    "&nbsp;" + prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                labelContainer.childNodes[i].innerHTML = classPrediction;
+                if (prediction[i].probability.toFixed(2) > 0.5) {
+                    guess = i;
+                }
+                // array[i] = prediction[i].className;
+                // parray[i] = prediction[i].probability.toFixed(2);
+            }
+            if (swit == 1) {
+                for (let i = 0; i < maxPredictions; i++) {
+                    if (prediction[i].probability.toFixed(2) > 0.5) {
+                        // var but = document.getElementById('but');
+                        // but.setAttribute('onclick', "window.open('" + array[i+1] + "')");
+                        window.requestAnimationFrame(predict);
+                    }
+                }
+            }
+
+            else {
+                window.requestAnimationFrame(loop);
+            }
+        }
+        init();
+    </script>
+
+    <style>
+        #webcam-container {
+            text-align: center;
+        }
+
+        #table {
+            width: 50%;
+            height: 70%;
+            text-align: center;
+            font-size: 1.2em;
+            position: relative;
+            top: 15%;
+            left: 25%;
+        }
+
+        #title {
+            text-align: center;
+        }
+
+        #label-container {
+            text-align: left;
+        }
+
+        #button {
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="title">
+        <h1>Teachable Machine</h1>
+    </div>
+    <table id="table">
+        <tr>
+            <td>
+                <div id="webcam-container"></div>
+            </td>
+            <td width="200">
+                <div>
+                    <h3>확률</h3>
+                </div>
+                <div id="label-container"></div>
+            </td>
+        </tr>
+    </table>
+
+
+    <script>
+
+
+        // var move = function () {
+        //     var a = document.createElement("a"),
+        //     url = link[guess];
+        //     a.href = url;
+        //     document.body.appendChild(a);
+        //     a.click();
+        //     setTimeout(function () {
+        //         document.body.removeChild(a);
+        //         window.URL.revokeObjectURL(url);
+        //     }, 0);
+        // }
+
+        var move = function () {
+            window.open(link[guess], "", "");
+        }
+
+    </script>
+
+
+    <br>
+    <br>
+    <div id="button">
+        <button type="button" id="but" onclick="move();">
+            <h3>상세보기</h3>
+        </button>&nbsp;&nbsp;&nbsp;
+        <button type="button" id="but2" onclick="swit=1">
+            <h3>사진찍기</h3>
+        </button>&nbsp;&nbsp;&nbsp;
+        <button type="button" id="but3" onclick="swit=0">
+            <h3>다시찍기</h3>
+        </button>
+    </div>
+
+
+</body>
+
+</html>
